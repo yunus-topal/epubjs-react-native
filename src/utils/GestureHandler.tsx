@@ -7,11 +7,12 @@ import {
 	Directions,
 	TouchableWithoutFeedback,
 } from "react-native-gesture-handler"
+import { TapPosition } from "src"
 
 interface Props {
 	width?: DimensionValue
 	height?: DimensionValue
-	onSingleTap: () => void
+	onSingleTap: (position: TapPosition) => void
 	onDoubleTap: () => void
 	onSwipeLeft: () => void
 	onSwipeRight: () => void
@@ -33,7 +34,20 @@ export function GestureHandler({
 	onLongPress,
 	children,
 }: Props) {
-	const singleTap = Gesture.Tap().runOnJS(true).maxDuration(250).onStart(onSingleTap)
+	let lastTapPosition: TapPosition | null = null
+
+	const singleTap = Gesture.Tap()
+		.runOnJS(true)
+		.maxDuration(250)
+		.onStart((e) => {
+			lastTapPosition = {
+			x: e.x,
+			y: e.y,
+			absoluteX: e.absoluteX,
+			absoluteY: e.absoluteY,
+			}
+			onSingleTap(lastTapPosition)
+		})
 
 	const doubleTap = Gesture.Tap()
 		.runOnJS(true)
@@ -68,9 +82,11 @@ export function GestureHandler({
 		} else {
 			lastTap = Date.now()
 			timer = setTimeout(() => {
-				onSingleTap()
-				lastTap = null
-				clearTimeout(timer)
+			if (lastTapPosition) {
+				onSingleTap(lastTapPosition)
+			}
+			lastTap = null
+			clearTimeout(timer)
 			}, 500)
 		}
 	}

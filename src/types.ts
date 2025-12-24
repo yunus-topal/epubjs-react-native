@@ -1,5 +1,12 @@
 import { DimensionValue, ViewStyle } from 'react-native';
 
+export type TapPosition = {
+  x: number
+  y: number
+  absoluteX: number
+  absoluteY: number
+}
+
 export type PaginateOptions = {
   keepScrollOffset?: boolean;
 };
@@ -326,7 +333,7 @@ export interface ReaderProps {
   /**
    * Called when book is tapped once
    */
-  onSingleTap?: () => void;
+  onSingleTap?: (pos: TapPosition) => void;
   /**
    * Called when the book was double pressed
    * @deprecated use **onDoubleTap** instead

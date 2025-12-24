@@ -6,7 +6,7 @@ import type {
   WebViewMessageEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 import { defaultTheme as initialTheme, ReaderContext } from './context';
-import type { Bookmark, ReaderProps } from './types';
+import type { Bookmark, ReaderProps, TapPosition } from './types';
 import { OpeningBook } from './utils/OpeningBook';
 import INTERNAL_EVENTS from './utils/internalEvents.util';
 import { GestureHandler } from './utils/GestureHandler';
@@ -35,7 +35,7 @@ export function View({
   onBeginning = () => {},
   onFinish = () => {},
   onPress = () => {},
-  onSingleTap = () => {},
+  onSingleTap = (_pos: TapPosition) => {},
   onDoublePress = () => {},
   onDoubleTap = () => {},
   onLongPress = () => {},
@@ -417,9 +417,9 @@ export function View({
     <GestureHandler
       width={width}
       height={height}
-      onSingleTap={() => {
+      onSingleTap={(pos) => {
         onPress();
-        onSingleTap();
+        onSingleTap(pos);
       }}
       onDoubleTap={() => {
         onDoublePress();
